@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+ 
+  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+   <property name="locations">
+     <list>
+       <value>classpath:jdbc.properties</value>
+     </list>
+   </property>
+ </bean>
+ 
+   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+      <property name="driverClassName"
+			value="${jdbc.driver}">
+		</property>
+		<property name="url"
+			value="${jdbc.url}">
+		</property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+    </bean>
+    
+     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+	</bean>
+    
+    
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		 <!-- 注入sqlSessionFactory -->
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+		 <!-- 指定dao层接口,自动生成代理类 -->
+		<property name="basePackage" value="com.dao"/>
+ </bean>
+ <!-- 自动生成查询年级信息的dao实现 -->
+    <context:component-scan base-package="com.service.impl"></context:component-scan>
+    <!-- 配置Spring的事务管理器 -->   
+	  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+	      <property name="dataSource" ref="dataSource"/> 
+	   </bean>  
+	  
+       <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>      
+	 <!-- securityManager安全管理器 -->
+      <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+          <property name="authenticator" ref="authenticator" />
+           <property name="realms" >
+              <list>
+	             <ref bean="ShiroRealm"/>
+	             <ref bean="SecondRealm"/>
+	          </list>
+           </property>
+          <!-- 注入缓存管理器 -->
+          <property name="cacheManager" ref="cacheManager" />
+          <!-- 注入session管理器 -->
+          <!-- <property name="sessionManager" ref="sessionManager" /> -->
+         <!-- 记住我 -->
+          <property name="rememberMeManager" ref="rememberMeManager" /> 
+        <!--  <property name="rememberMeManager.cookie.maxAge" value="10"></property> -->
+     </bean>   
+      <!--rememberMe cookie-->
+        <bean id="rememberMe" class="org.apache.shiro.web.servlet.SimpleCookie">
+                <constructor-arg  value="rememberMe"></constructor-arg>
+                <property name="httpOnly" value="true"></property>
+                <!--cookie 的最大失效时间 30天-->
+                <!-- <property name="maxAge" value="259200"></property> -->
+                <!-- 为-1时关闭浏览器则失效 -->
+                 <property name="maxAge" value="10"></property>
+        </bean>
+        <!--rememberMe 管理器-->
+        <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+                <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).decode('4AvVhmFLUs0KTA3Kprsdag==')}"></property>
+                <property name="cookie" ref="rememberMe"></property>
+        </bean>
+   <!-- 缓存管理器 -->
+     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+         <property name="cacheManagerConfigFile" value="classpath:shiro-ehcache.xml" />
+     </bean>
+      <!-- 自定义realm -->
+      <!--  定义多个realm-->
+      <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+          <!-- 认证策略 -->
+        <!--   <property name="authenticationStrategy">
+             <bean class="org.apache.shiro.authc.pam.AllSuccessfulStrategy"></bean>
+          </property>  -->
+          <!-- 认证策略 -->
+      </bean>
+      <!--  定义多个realm-->
+     <bean id="ShiroRealm" class="com.realm.ShiroRealm">
+          <!-- 将凭证匹配器设置到realm中，realm按照凭证匹配器的要求进行散列 -->
+         <property name="credentialsMatcher"  > 
+            <bean class="org.apache.shiro.authc.credential.Md5CredentialsMatcher">
+                <property name="hashAlgorithmName" value="MD5"></property>
+                <property name="hashIterations" value="1024"></property>
+                
+            </bean>
+         </property>
+      </bean>
+      <bean id="SecondRealm" class="com.realm.SecondRealm">
+          <!-- 将凭证匹配器设置到realm中，realm按照凭证匹配器的要求进行散列 -->
+         <property name="credentialsMatcher"  > 
+            <bean class="org.apache.shiro.authc.credential.Md5CredentialsMatcher">
+                <property name="hashAlgorithmName" value="SHA1"></property>
+                <property name="hashIterations" value="1024"></property>
+            </bean>
+         </property>
+      </bean>
+  <!-- web.xml中shiro的filter对应的bean -->
+      <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+          <!-- 管理器，必须设置 -->
+          <property name="securityManager" ref="securityManager" />
+          <!-- 拦截到，跳转到的地址,通过此地址去认证 -->
+          <property name="loginUrl" value="/login.jsp" />
+         <!-- 认证成功统一跳转到/admin/index.do，建议不配置，shiro认证成功自动到上一个请求路径 -->
+         <!--  <property name="successUrl" value="/success.jsp" /> -->
+          <!-- 通过unauthorizedUrl指定没有权限操作时跳转页面 -->
+          <property name="unauthorizedUrl" value="/refuse.jsp" /> 
+          <property name="filters">
+		    <map>
+		      <!-- 配置退出登录后到指定页面 -->
+		        <entry key="logout" value-ref="logoutFilter" />
+		        <!-- 将自定义 的FormAuthenticationFilter注入shiroFilter中-->
+                <!--  <entry key="authc" value-ref="formAuthenticationFilter" /> -->
+		    </map>
+          </property>
+          
+          <!--  配置哪些页面需要受保护
+            以及访问这些页面需要的权限
+            1). anon(anonymous) 可以被匿名访问，即不需要登录就可以访问
+            2). authc(authentication) 必须认证之后，即登录后才可以访问
+            3). URL 权限采取第一次匹配优先的方式，即从开头使用第一个匹配的url模式对应的拦截器链。
+            4). logout 登出 
+            5).roles角色过滤器
+             -->
+            
+      <!--     <property name="filters">
+              <map>
+                  将自定义 的FormAuthenticationFilter注入shiroFilter中
+                  <entry key="authc" value-ref="formAuthenticationFilter" />
+              </map>
+         </property> -->
+           <property name="filterChainDefinitions">
+              <value>
+                 /login**= anon
+                 /admin.jsp=user
+                 /refuse.jsp=anon
+                 /logout=logout
+                <!--  /admin.jsp =authc,roles[admin] -->
+                 /user.jsp =authc,roles[user]
+                 /menu.jsp =authc
+                 /success.jsp =user 
+              </value>
+          </property> 
+        <!--   <property name="filterChainDefinitionMap" ref="filterChainDefinitionMap"></property> -->
+      </bean>
+      <!-- 配置退出登录后到指定页面 -->
+      <bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+     <property name="redirectUrl" value="/login.jsp" />
+     </bean>
+      <!-- 配置 LifecycleBeanPostProcessor，可以自动的调用配置在spring IOC容器中Shiro bean的声明周期方法-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+      <!-- 启用 IOC 容器中使用 shiro 注解，但必须在配置了LifecycleBeanPostProcessor 之后才可以使用。 -->
+        <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+	    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+	        <property name="securityManager" ref="securityManager"/>
+	    </bean>
+	<!--     <bean id="shiroService" class="com.service.ShiroService"></bean> -->
+	    <!-- 配置一个bean，该bean实际上是一个map，通过实例工厂的方式 -->
+	  <!--   <bean id="filterChainDefinitionMap" factory-bean="filterChainDefinitionMapBuilder" factory-method="buildFilterChainDefinitionMap"></bean>
+	    <bean id="filterChainDefinitionMapBuilder" class="com.controller.FilterChainDefinitionMapBuilder"></bean> -->
+</beans>

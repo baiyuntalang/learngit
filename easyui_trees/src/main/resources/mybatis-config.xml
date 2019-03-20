@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!-- 
+将其记录的文件可改成log4j类型
+<settings name="logimpl" value="LOG4J">
+
+</settings>
+ -->
+<!-- <typeAliases>
+    一个实体类一个别名
+     <typeAlias type="com.entity.Grade" alias="Grade"/>
+     将包下所有的类，取别名 别名就是类名
+      <package name="com.entity"/>
+</typeAliases> -->
+	<!--  
+	<environments default="development">
+		<environment id="development">
+		<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+			<property name="driver" value="com.mysql.jdbc.Driver"/>
+			<property name="url" value="jdbc:mysql://localhost:3306/62-7"/>
+			<property name="username" value="root"/>
+			<property name="password" value="123456"/>
+			</dataSource>
+		</environment>
+	</environments>
+	-->
+	<plugins>
+   <!--  com.github.pagehelper为PageHelper类所在包名-->
+    <plugin interceptor="com.github.pagehelper.PageInterceptor"> 
+        <!-- 使用下面的方式配置参数，后面会有所有的参数介绍 -->
+       <!--  <property name="dialect" value="mysql"/>
+       <property name="offsetAsPageNum" value="false"/>
+        <property name="rowBoundsWithCount" value="false"/>
+        <property name="pageSizeZero" value="true"/>
+        <property name="reasonable" value="false"/>
+        <property name="supportMethodsArguments" value="false"/>
+        <property name="returnPageInfo" value="none"/> -->
+	</plugin>
+   </plugins>
+	<mappers>
+    <mapper resource="com/mapper/TPermissionMapper.xml"/>
+	<mapper resource="com/mapper/TRoleMapper.xml"/>
+	<mapper resource="com/mapper/TRolePermissionMapper.xml"/>
+	<mapper resource="com/mapper/TUserMapper.xml"/>
+	<mapper resource="com/mapper/TUserRoleMapper.xml"/>
+	<mapper resource="com/mapper/TDeptMapper.xml"/>
+	</mappers>
+</configuration>

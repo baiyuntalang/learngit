@@ -1,0 +1,344 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cn-rs</groupId>
+  <artifactId>easyui_trees</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>easyui_trees</name>
+<build>  
+        <plugins>  
+            <plugin>  
+                <artifactId>maven-compiler-plugin</artifactId>  
+                <configuration>  
+                    <source>1.7</source>  
+                    <target>1.7</target>  
+                </configuration>  
+            </plugin>  
+            <plugin>  
+                <artifactId>maven-war-plugin</artifactId>  
+                <version>2.4</version>  
+                <configuration>  
+                    <version>3.0</version>  
+                </configuration>  
+            </plugin>  
+        </plugins>  
+        <finalName>webserver</finalName>  
+    </build>  
+  <!-- 初始化框架的版本号 -->  
+    <properties>  
+        <spring.version>4.3.3.RELEASE</spring.version>  
+        <shiro.version>1.3.2</shiro.version>
+    </properties>  
+    <dependencies>  
+    <dependency>  
+      <groupId>junit</groupId>  
+      <artifactId>junit</artifactId>  
+      <version>3.8.1</version>  
+      <scope>test</scope>  
+    </dependency> 
+      
+         <!-- 加入ServletAPI -->  
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->  
+        <dependency>  
+            <groupId>javax.servlet</groupId>  
+            <artifactId>servlet-api</artifactId>  
+            <version>2.3</version>  
+            <scope>provided</scope>  
+        </dependency>  
+          
+          
+        <!-- MySQL依赖 start -->  
+        <dependency>  
+            <groupId>mysql</groupId>  
+            <artifactId>mysql-connector-java</artifactId>  
+            <version>5.1.25</version>  
+        </dependency>  
+  
+        <!-- MySQL依赖 end -->  
+          
+          
+          
+        <!-- 加入MyBatis 依赖 start -->  
+        <dependency>  
+            <groupId>org.mybatis</groupId>  
+            <artifactId>mybatis</artifactId>  
+            <version>3.2.5</version>  
+        </dependency>  
+        <!-- 加入MyBatis 依赖 end -->  
+  
+        <!-- Log4j start -->  
+       <!--  <dependency>  
+            <groupId>log4j</groupId>  
+            <artifactId>log4j</artifactId>  
+            <version>1.2.17</version>  
+        </dependency>   -->
+        <!-- Log4j end -->  
+  
+           <!-- 引入Spring(包含SpringMVC) 依赖 start -->  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-core</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-web</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-oxm</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-tx</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+  
+  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-jdbc</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-webmvc</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-aop</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-context-support</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+  
+        <dependency>  
+            <groupId>org.springframework</groupId>  
+            <artifactId>spring-test</artifactId>  
+            <version>${spring.version}</version>  
+        </dependency>  
+  
+        <!-- 引入Spring 依赖 end -->  
+  
+        <!-- 引用c3p0 依赖 start-->  
+        <dependency>  
+            <groupId>com.mchange</groupId>  
+            <artifactId>c3p0</artifactId>  
+            <version>0.9.2.1</version>  
+        </dependency>  
+        <!-- 引用c3p0 依赖 end-->  
+  
+        <!-- 引用插件依赖：MyBatis整合Spring -->  
+        <dependency>  
+            <groupId>org.mybatis</groupId>  
+            <artifactId>mybatis-spring</artifactId>  
+            <version>1.3.0</version>  
+        </dependency>  
+      
+        <!-- JSTL -->  
+        <dependency>  
+            <groupId>jstl</groupId>  
+            <artifactId>jstl</artifactId>  
+            <version>1.2</version>  
+        </dependency>
+
+        <dependency>
+        	<groupId>org.mybatis.generator</groupId>
+        	<artifactId>mybatis-generator-core</artifactId>
+        	<version>1.3.3</version>
+        </dependency>
+        <dependency>
+        	<groupId>commons-logging</groupId>
+        	<artifactId>commons-logging-api</artifactId>
+        	<version>1.1</version>
+        </dependency>
+        <dependency>
+        	<groupId>commons-dbcp</groupId>
+        	<artifactId>commons-dbcp</artifactId>
+        	<version>1.3</version>
+        </dependency>
+        <dependency>
+        	<groupId>commons-fileupload</groupId>
+        	<artifactId>commons-fileupload</artifactId>
+        	<version>1.2.1</version>
+        </dependency>
+         <dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.2</version>
+</dependency>
+       <!--  <dependency>
+        	<groupId>com.google.code.gson</groupId>
+        	<artifactId>gson</artifactId>
+        	<version>2.2.4</version>
+        </dependency> -->
+        <!-- json转换支持 -->
+      <dependency>
+      	<groupId>com.fasterxml.jackson.core</groupId>
+      	<artifactId>jackson-annotations</artifactId>
+      	<version>2.9.0</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.fasterxml.jackson.core</groupId>
+      	<artifactId>jackson-core</artifactId>
+      	<version>2.9.5</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.fasterxml.jackson.core</groupId>
+      	<artifactId>jackson-databind</artifactId>
+      	<version>2.9.5</version>
+      </dependency>
+      <!-- excel文件上传 -->
+      <dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>3.9</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+    <version>3.9</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml-schemas</artifactId>
+    <version>3.9</version>
+</dependency>
+        
+      <!--添加mybatis分页插件支持-->
+       
+<dependency>
+		    <groupId>com.github.pagehelper</groupId>
+		    <artifactId>pagehelper</artifactId>
+		    <version>5.0.0</version>
+		</dependency>
+        
+        
+<dependency>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>2.17</version>
+</dependency>
+  <!-- 	<dependency>
+  		<groupId>com.fh</groupId>
+  		<artifactId>maven1</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<type>war</type>
+  	</dependency> -->
+  	<!--@Builder声明实体，表示可以进行Builder方式初始化  -->
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.16.10</version>
+    </dependency>
+    <!-- 引入json依赖  和shiro包有冲突-->
+
+<dependency>
+<groupId>net.sf.json-lib</groupId>
+<artifactId>json-lib</artifactId>
+<version>2.4</version>
+<classifier>jdk15</classifier>
+</dependency>
+<dependency>
+<groupId>commons-beanutils</groupId>
+<artifactId>commons-beanutils</artifactId>
+<version>1.7.0</version>
+</dependency>
+<dependency>
+<groupId>commons-collections</groupId>
+<artifactId>commons-collections</artifactId>
+<version>3.1</version>
+</dependency>
+<dependency>
+<groupId>commons-lang</groupId>
+<artifactId>commons-lang</artifactId>
+<version>2.5</version>
+</dependency>
+<dependency>
+<groupId>net.sf.ezmorph</groupId>
+<artifactId>ezmorph</artifactId>
+<version>1.0.3</version>
+</dependency> 
+<!--@responseBody返回json，依赖jar包====start【即Jackson：操作json转换的jar】-->
+ 
+        <!--必须加：databind-->
+        <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.core</groupId>-->
+            <!--<artifactId>jackson-databind</artifactId>-->
+            <!--<version>2.8.2</version>-->
+        <!--</dependency>-->
+ 
+<!--         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+        以上【三个jar包紧密依赖】同时存在。
+ 
+        <dependency>
+            <groupId>com.fasterxml.jackson</groupId>
+            <artifactId>jackson-parent</artifactId>
+            <version>2.8</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>  -->
+        <!--@responseBody返回json，依赖jar包====end-->
+ <!-- shiro -->
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-core</artifactId>
+      <version>${shiro.version}</version>
+    </dependency>
+   <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-ehcache</artifactId>
+      <version>${shiro.version}</version>
+    </dependency>   
+     <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-web</artifactId>
+      <version>${shiro.version}</version>
+    </dependency> 
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-spring</artifactId>
+      <version>${shiro.version}</version>
+    </dependency>
+      <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-nop</artifactId>
+       <version>1.7.2</version>
+   </dependency> 
+   <!-- shiro -->
+  </dependencies>  
+  
+</project>
